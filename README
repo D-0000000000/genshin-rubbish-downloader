@@ -49,5 +49,8 @@ sub_channel=1
 
 ## FAQ
 
-Q: 为啥这下载器一部分Python一部分C++？
-A: 因为我Python不会多线程C++不会处理json。
+Q: 为啥这下载器一部分Python一部分C++？  
+A: 因为我Python不会多线程C++不会处理json。  
+
+Q: 好难用啊，能再改改吗？  
+A: 又不是不能用，摆烂.jpg  
