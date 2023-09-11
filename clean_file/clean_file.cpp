@@ -1,3 +1,4 @@
+#include "file_loader/file_loader.hpp"
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -10,19 +11,10 @@
 int clean_file(int argc, char *argv[])
 {
 	std::set<std::string> check_clean_file;
-	std::fstream cfgin(argv[2]);
-	if (cfgin.fail())
+	for (auto i : fp.all_file_list)
 	{
-		std::cout << strerror(errno) << "\n";
-		return 1;
+		check_clean_file.insert(i);
 	}
-	while (!cfgin.eof())
-	{
-		std::string file_name;
-		std::getline(cfgin, file_name);
-		check_clean_file.insert(file_name);
-	}
-	cfgin.close();
 	std::string cwd = std::filesystem::current_path();
 	uint32_t path_prefix_length = cwd.length();
 	for (auto item : std::filesystem::recursive_directory_iterator(std::filesystem::current_path()))

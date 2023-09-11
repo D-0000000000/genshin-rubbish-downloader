@@ -1,8 +1,11 @@
 {
-    "url": "https://autopatchcn.yuanshen.com/client_app/download/pc_zip/20230625120029_C0NLGkC0fxSaNKnu/ScatteredFiles/",
+    "url_json": "https://sdk-static.mihoyo.com/hk4e_cn/mdk/launcher/api/resource?key=eYd89JmJ&launcher_id=18",
     "pkg": [
         "pkg_version",
-        "Audio_Chinese_pkg_version"
+        "Audio_Chinese_pkg_version",
+        "Audio_English(US)_pkg_version",
+        "Audio_Japanese_pkg_version",
+        "Audio_Korean_pkg_version"
     ],
     "thread": 16
 }
