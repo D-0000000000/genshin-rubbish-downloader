@@ -1,3 +1,4 @@
+#include "file_loader/file_loader.hpp"
 #include <iostream>
 #include <fstream>
 #include <queue>
@@ -10,7 +11,8 @@
 #include <cstdlib>
 #include <cstring>
 
-std::queue<std::pair<std::string, std::string>> file_list;
+// std::queue<std::pair<std::string, std::string>> file_list;
+std::queue<std::string> file_list;
 std::vector<std::thread> thread_pool;
 std::thread logger_thread;
 std::thread main_download_thread;
@@ -39,7 +41,7 @@ void download()
 		auto file_name = file_list.front();
 		file_list.pop();
 		mtx.unlock();
-		curl_download_file(file_name.first, file_name.second);
+		curl_download_file(fp.decompressed_path, file_name);
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	}
 	return;
@@ -87,38 +89,13 @@ void wait_for_complete(int32_t num_thread)
 
 int download_file(int argc, char *argv[])
 {
-	if (argc < 3)
+	std::cout << "Download connection: " << fp.thread_num << "\n";
+	for (auto i : fp.dl_file_list)
 	{
-		std::cout << "downloader <url> <download thread number>\n";
-		std::cout << "downloader download <list> <thread> <url>\n";
-		return 1;
+		file_list.push(i);
 	}
-	std::fstream cfgin;
-	std::string download_url = argv[4];
-	int32_t num_thread = atoi(argv[3]);
-	num_thread = std::max(1, num_thread);
-	num_thread = std::min(4096, num_thread);
-	cfgin.open(argv[2]);
-	if (cfgin.fail())
-	{
-		std::cout << strerror(errno) << "\n";
-		return 1;
-	}
-	std::cout << "Using file list: " << argv[2] << "\n";
-	std::cout << "Download connection: " << num_thread << "\n";
-	while (!cfgin.eof())
-	{
-		std::string file_name;
-		std::getline(cfgin, file_name);
-		if (file_name == "")
-		{
-			continue;
-		}
-		file_list.push(std::make_pair(download_url, file_name));
-	}
-	cfgin.close();
 	file_total = file_list.size();
-	download_init(num_thread);
-	wait_for_complete(num_thread);
+	download_init(fp.thread_num);
+	wait_for_complete(fp.thread_num);
 	return 0;
 }
