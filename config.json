@@ -1,5 +1,6 @@
 {
     "url_json": "https://sdk-static.mihoyo.com/hk4e_cn/mdk/launcher/api/resource?key=eYd89JmJ&launcher_id=18",
+    "channel": "pre_download_game",
     "pkg": [
         "pkg_version",
         "Audio_Chinese_pkg_version",

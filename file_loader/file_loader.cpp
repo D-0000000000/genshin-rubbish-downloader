@@ -12,6 +12,7 @@ std::vector<std::string> pkg_name;
 nlohmann::json resource_json;
 nlohmann::json config_json;
 file_path fp;
+std::string channel;
 
 bool load_json(char *file_name, nlohmann::json &json)
 {
@@ -59,6 +60,8 @@ bool load_resource_json()
 		fp.thread_num = std::max(1, fp.thread_num);
 		fp.thread_num = std::min(256, fp.thread_num);
 		std::string resource_url = config_json["url_json"];
+		channel = "game";
+		channel = config_json["channel"];
 		pkg_name = config_json["pkg"];
 		for (auto i : pkg_name)
 		{
@@ -71,7 +74,7 @@ bool load_resource_json()
 		{
 			throw 1003;
 		}
-		fp.decompressed_path = resource_json["data"]["game"]["latest"]["decompressed_path"];
+		fp.decompressed_path = resource_json["data"][channel]["latest"]["decompressed_path"];
 		if (fp.decompressed_path.back() != '/')
 		{
 			fp.decompressed_path.push_back('/');
@@ -90,7 +93,7 @@ bool load_all_file_list()
 	fp.all_file_list.clear();
 	for (auto i : pkg_name)
 	{
-		std::string cmdline = "curl --create-dirs -s -O " + fp.decompressed_path + i;
+		std::string cmdline = "curl --create-dirs -s -O \"" + fp.decompressed_path + i + "\"";
 		system(cmdline.c_str());
 		std::fstream fin(i, std::ios_base::in);
 		if (!fin.is_open())
@@ -117,9 +120,10 @@ bool load_file()
 {
 	fp.thread_num = 1;
 	bool ret = true;
-	load_json("config.json", config_json);
+	load_json((char *)"config.json", config_json);
 	ret &= load_resource_json();
 	ret &= load_all_file_list();
+	std::cout << "Channel: " << channel << std::endl;
 	std::cout << fp.decompressed_path << std::endl;
 	std::cout << fp.thread_num << std::endl;
 	return ret;
