@@ -91,6 +91,7 @@ bool load_resource_json()
 bool load_all_file_list()
 {
 	fp.all_file_list.clear();
+	fp.dl_file_list.clear();
 	for (auto i : pkg_name)
 	{
 		std::string cmdline = "curl --create-dirs -s -O \"" + fp.decompressed_path + i + "\"";
@@ -110,6 +111,9 @@ bool load_all_file_list()
 				continue;
 			}
 			fp.all_file_list.push_back(ss);
+			auto file_attr = nlohmann::json::parse(ss);
+			std::string file_name = file_attr["remoteName"];
+			fp.dl_file_list.push_back(file_name);
 		}
 		fin.close();
 	}
