@@ -88,6 +88,7 @@ namespace verify_file_ns
 			file_list.push(i);
 		}
 		file_total = file_list.size();
+		fp.dl_file_list.clear();
 		logger_thread = std::thread(verify_logger);
 		thread_pool.resize(fp.thread_num);
 		for (int i = 0; i < fp.thread_num; i++)
